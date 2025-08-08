@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <title>Removedor de Fundo Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>Removedor de Fundo Online</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" required />
+            <button type="submit">Remover Fundo</button>
+        </form>
+
+        {% if error %}
+            <div class="error-message" style="color: red; font-weight: bold; margin-top: 15px;">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <div id="loading" style="display: none; margin-top: 20px;">
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            <p>Processando a imagem, aguarde...</p>
+        </div>
+
+        <p>Envie uma imagem e baixe a versão sem fundo!</p>
+
+        {% if processed_image %}
+            <h2>Resultado</h2>
+
+            <!-- Imagens lado a lado para visualização simples -->
+            <div style="display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 40px; margin-bottom: 30px; width: 100%;">
+
+                <div style="text-align: center;">
+                    <p><h2>Antes</h2></p>
+                    <img src="{{ url_for('static', filename='input.png') }}" alt="Imagem original" style="max-width: 300px; border-radius: 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.5);" />
+                </div>
+                <div style="text-align: center;">
+                    <p><h2>Depois</h2></p>
+                    <img src="{{ url_for('static', filename='output.png') }}" alt="Imagem sem fundo" style="max-width: 300px; border-radius: 12px; box-shadow: 0 6px 25px rgba(0,0,0,0.5);" />
+                </div>
+            </div>
+
+            <a href="{{ url_for('static', filename='output.png') }}" download="imagem_sem_fundo.png">
+                <button>Baixar imagem sem fundo</button>
+            </a>
+        {% endif %}
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const loading = document.getElementById('loading');
+
+        form.addEventListener('submit', () => {
+            loading.style.display = 'block';
+        });
+    </script>
+
+</body>
+</html>
