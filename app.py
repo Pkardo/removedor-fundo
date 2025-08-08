@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request
 from rembg import remove
+from PIL import Image
+import io
 import os
 
 app = Flask(__name__)
@@ -29,30 +31,40 @@ def upload():
         return render_template('index.html', error=error_message)
 
     try:
-        # Salvar a imagem original em static/input.png
+        # Abre imagem e redimensiona se maior que 800px largura
+        img = Image.open(file.stream)
+        max_width = 800
+        if img.width > max_width:
+            ratio = max_width / img.width
+            new_height = int(img.height * ratio)
+            img = img.resize((max_width, new_height), Image.ANTIALIAS)
+
+        # Salva imagem redimensionada em memória
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='PNG')
+        img_byte_arr = img_byte_arr.getvalue()
+
+        # Remove fundo
+        output_data = remove(img_byte_arr)
+
+        # Salva imagens na pasta static
         input_path = os.path.join(STATIC_PATH, INPUT_IMG)
-        file.save(input_path)
-
-        # Abrir o arquivo original para remover fundo
-        with open(input_path, 'rb') as f:
-            input_data = f.read()
-
-        output_data = remove(input_data)
-
-        # Salvar a imagem processada em static/output.png
         output_path = os.path.join(STATIC_PATH, OUTPUT_IMG)
+
+        # Salva a imagem original redimensionada
+        with open(input_path, 'wb') as f:
+            f.write(img_byte_arr)
+
+        # Salva a imagem sem fundo
         with open(output_path, 'wb') as f:
             f.write(output_data)
 
         return render_template('index.html', processed_image=True)
 
     except Exception as e:
-        error_message = 'Ocorreu um erro ao processar a imagem. Tente novamente com outra imagem.'
+        error_message = f'Ocorreu um erro ao processar a imagem: {str(e)}'
         return render_template('index.html', error=error_message)
-    
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))   # pega a porta do ambiente Render (ou 5000 local)
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
-
