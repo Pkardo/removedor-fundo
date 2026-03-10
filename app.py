@@ -31,7 +31,7 @@ def upload():
         return render_template('index.html', error=error_message)
 
     try:
-        # Abre imagem e redimensiona se maior que 800px largura
+        #Abre a imagem e redimensiona se for maior que 800px de largura
         img = Image.open(file.stream)
         max_width = 800
         if img.width > max_width:
@@ -39,19 +39,19 @@ def upload():
             new_height = int(img.height * ratio)
             img = img.resize((max_width, new_height), Image.ANTIALIAS)
 
-        # Salva imagem redimensionada em memória
+        #Salva imagem redimensionada na memoria
         img_byte_arr = io.BytesIO()
         img.save(img_byte_arr, format='PNG')
         img_byte_arr = img_byte_arr.getvalue()
 
-        # Remove fundo
+        # Removefundo
         output_data = remove(img_byte_arr)
 
-        # Salva imagens na pasta static
+        #Salva imagens na pasta static
         input_path = os.path.join(STATIC_PATH, INPUT_IMG)
         output_path = os.path.join(STATIC_PATH, OUTPUT_IMG)
 
-        # Salva a imagem original redimensionada
+        #Salva a imagem original redimensionada
         with open(input_path, 'wb') as f:
             f.write(img_byte_arr)
 
