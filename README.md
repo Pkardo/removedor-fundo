@@ -84,3 +84,56 @@ Duas versões são salvas na pasta > static/
 
 input.png → imagem original (já redimensionada) <br>
 output.png → imagem sem fundo
+
+<h3>7. Exibição no frontend</h3>
+
+Após o processamento:
+
+A página é recarregada
+
+As imagens "Antes" e "Depois" são exibidas lado a lado
+
+Um botão permite baixar a imagem final
+
+<h3>8. Visual</h3>
+
+Enquanto a imagem está sendo processada:
+
+Uma barra de carregamento animada aparece
+
+Isso melhora a experiência do usuário.
+
+<h2>⚠️ Necessidades e decisões técnicas</h2>
+
+Algumas escolhas importantes foram feitas:
+
+- Redimensionamento da imagem
+→ evita processamento lento e consumo excessivo
+
+- Uso de memória (BytesIO)
+→ evita escrita desnecessária no disco antes do processamento
+
+- Validação de arquivos
+→ garante segurança básica e evita erros
+
+- Processamento síncrono
+→ mais simples de implementar, porém pode ser lento para imagens grandes
+
+<hr>
+
+Este projeto demonstra, de forma prática, como integrar IA + backend + frontend para resolver um problema real.
+
+Mesmo sendo simples, ele aborda conceitos importantes como:
+
+Manipulação de arquivos
+
+Processamento de imagens
+
+Integração de bibliotecas externas
+
+Experiência do usuário
+
+
+<hr>
+
+<h3>📈 Melhorias (Em Processo)..</h3>
